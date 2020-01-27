@@ -1,6 +1,6 @@
 class BaseGameEntity:
-
-
+    
+    
     def _SetID(self, value):
         self._m_ID = value
 
@@ -59,6 +59,3 @@ class EnterMineAndDigForGold(SingletonDecor, State):
     def Enter(self):
         pass
     
-    Execute
-
-
