@@ -1,5 +1,5 @@
 from random import randint
-from time import clock
+import time
 
 
 class FSM:
@@ -12,7 +12,7 @@ class FSM:
         self.transition = None
     
     def AddTransition(self, transitionName, transition):
-        self.transition[transitionName] = transition
+        self.transitions[transitionName] = transition
     
     def AddState(self, stateName, state):
         self.states[stateName] = state
@@ -51,7 +51,7 @@ class State:
         
     def Enter(self):
         self.timer = randint(0, 5)
-        self.startTime = int(clock())
+        self.startTime = int(time.time())
     
     def Execute(self):
         pass
@@ -70,9 +70,85 @@ class CleanDishes(State):
     def Execute(self):
         print("cleaning dishes")
         
-        if(self.startTime + self.timer <= clock()):
+        if(self.startTime + self.timer <= time.time()):
             if not (randint(1, 3) % 2):
                 self.FSM.ToTransition("toVacuum")
             else:
                 self.FSM.ToTransition("toSleep")
-                
+    
+    def Exit(self):
+        print("Finished Cleaning Dishes")
+
+class Vacuum(State):
+    def __init__(self, FSM):
+        super(Vacuum, self).__init__(FSM)
+    
+    def Enter(self):
+        print("Vacuum")
+        super(Vacuum, self).Enter()
+        
+    def Execute(self):
+        print("VACOOOOOOOOOOOOMING")
+        if(self.startTime + self.timer <= time.time()):
+            if not (randint(1, 3) % 2):
+                self.FSM.ToTransition("toSleep")
+            else:
+                self.FSM.ToTransition("toCleanDishes")
+    
+    def Exit(self):
+        print("Finished Vacuum")
+        
+class Sleep(State):
+    
+    def __init__(self, FSM):
+        super(Sleep, self).__init__(FSM)
+        self.sleepAmount = 0
+        self.startTime = 0
+    
+    def Enter(self):
+        print("starting to SLEEP")
+        super(Sleep, self).Enter()
+    
+    def Execute(self):
+        print("SLEEPING")
+        if(self.startTime + self.timer <= time.time()):
+            if not (randint(1, 3) % 2):
+                self.FSM.ToTransition("toVacuum")
+            else:
+                self.FSM.ToTransition("toCleanDishes")
+    
+    def Exit(self):
+        print("WAKING UPPP (grab a brush and put on a little make up)")
+    
+
+
+Char = type("Char",(object,),{})
+
+class Robot(Char):
+    def __init__(self):
+        self.FSM = FSM(self)
+        
+        self.FSM.AddState("Sleep", Sleep(self.FSM))
+        self.FSM.AddState("CleanDishes",CleanDishes(self.FSM))
+        self.FSM.AddState("Vacuum", Vacuum(self.FSM))
+
+        self.FSM.AddTransition("toSleep", Transition("Sleep"))
+        self.FSM.AddTransition("toVacuum", Transition("Vacuum"))
+        self.FSM.AddTransition("toCleanDishes", Transition("CleanDishes"))
+        
+        
+        self.FSM.SetState("Sleep")
+    
+    def Execute(self):
+        self.FSM.Execute()
+
+
+
+robot = Robot()
+for i in range(20):
+    startTime = time.time()
+    timeInterval = 1
+    while(startTime + timeInterval > time.time()):
+        pass
+    print(i)
+    robot.FSM.Execute()
