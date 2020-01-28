@@ -51,7 +51,7 @@ class State:
         
     def Enter(self):
         self.timer = randint(0, 5)
-        self.startTime = int(time.time())
+        self.startTime = int(time.process_time())
     
     def Execute(self):
         pass
@@ -64,13 +64,13 @@ class CleanDishes(State):
         super(CleanDishes, self).__init__(FSM)
     
     def Enter(self):
-        print("Cleaning Dishes")
+        print("Walk to ZINK")
         super(CleanDishes, self).Enter()
         
     def Execute(self):
-        print("cleaning dishes")
+        print("Cleaning dishes")
         
-        if(self.startTime + self.timer <= time.time()):
+        if(self.startTime + self.timer <= time.process_time()):
             if not (randint(1, 3) % 2):
                 self.FSM.ToTransition("toVacuum")
             else:
@@ -84,12 +84,12 @@ class Vacuum(State):
         super(Vacuum, self).__init__(FSM)
     
     def Enter(self):
-        print("Vacuum")
+        print("Start Vacuum cleaner")
         super(Vacuum, self).Enter()
         
     def Execute(self):
         print("VACOOOOOOOOOOOOMING")
-        if(self.startTime + self.timer <= time.time()):
+        if(self.startTime + self.timer <= time.process_time()):
             if not (randint(1, 3) % 2):
                 self.FSM.ToTransition("toSleep")
             else:
@@ -111,7 +111,7 @@ class Sleep(State):
     
     def Execute(self):
         print("SLEEPING")
-        if(self.startTime + self.timer <= time.time()):
+        if(self.startTime + self.timer <= time.process_time()):
             if not (randint(1, 3) % 2):
                 self.FSM.ToTransition("toVacuum")
             else:
@@ -122,9 +122,9 @@ class Sleep(State):
     
 
 
-Char = type("Char",(object,),{})
+Character = type("Char",(object,),{})
 
-class Robot(Char):
+class Robot(Character):
     def __init__(self):
         self.FSM = FSM(self)
         
@@ -146,9 +146,10 @@ class Robot(Char):
 
 robot = Robot()
 for i in range(20):
-    startTime = time.time()
+    startTime = time.process_time()
     timeInterval = 1
-    while(startTime + timeInterval > time.time()):
+    while(startTime + timeInterval > time.process_time()):
         pass
-    print(i)
+    print("[Current time]: ", i, "s \n")
     robot.FSM.Execute()
+    print("-----------------------------")
