@@ -1,61 +1,51 @@
+from fsm import FSM
 class BaseGameEntity:
     
+    _nextValidID = 0
     
     def _SetID(self, value):
+        assert value >= BaseGameEntity._nextValidID, "INVALID ID, YOURE BREAKING THE LAW"
         self._m_ID = value
+        BaseGameEntity._nextValidID = self._m_ID + 1
 
     def __init__(self, ID):
-        self._m_ID          = ID
-        self._m_NextValidID = 0
+        self._SetID(ID)
 
     def Update(self):
         pass
 
+print(BaseGameEntity._nextValidID)
+BaseGameEntity(0)
+print(BaseGameEntity._nextValidID)
+BaseGameEntity(1)
+print(BaseGameEntity._nextValidID)
 
-class Miner(BaseGameEntity):
+
+class Student(BaseGameEntity):
     def __init__(self, ID):
-        self.m_currentState  = State()
-        self.m_location      = Location("kek")
-        self.m_currentGold   = 0
-        self.m_goldInBank    = 0
-        self.m_thirst        = 0
-        self.m_fatigue       = 0
+        self.FSM = FSM(self)
+        self.thirst = 0
+        self.money = 0
+        self.fatigue = 0
     
-    def Update(self):
-        self.m_thirst += 1
-        if self.m_currentState in locals():
-            print(self.m_currentState)
-            self.m_currentState
         
+        #ADD STATES
+      #  self.FSM.AddState("Sleep", Sleep(self.FSM))
+       # self.FSM.AddState("Eat",Eat(self.FSM))
+        #self.FSM.AddState("Vacuum", Vacuum(self.FSM))
+
+        
+       # #ADD TRANSITIONS
+       # self.FSM.AddTransition("toSleep", Transition("Sleep"))
+        #self.FSM.AddTransition("toVacuum", Transition("Vacuum"))
+        #self.FSM.AddTransition("toEat", Transition("Eat"))
+                
+
+    def Update(self):
+        if self.FSM.currentState is not None:
+            self.FSM.Execute()
+        else:
+            print("[miner.py]: STATE IS NONE, LAZY ASS")
     
-    def ChangeState(self, newState):
-        self.m_currentState.Exit(self)
-        self.m_currentState = newState
-        self.m_currentState.Enter(self)
-        pass
-
-class State(object):
-    def Enter(self, actor):
-        pass
-    def Execute(self, actor):
-        pass
-    def Exit(self, actor):
-        pass
-
-class Location:
-    def __init__(self, name):
-        self.m_name = name
-
-class SingletonDecor:
-    def __init__(self,klass):
-        self.klass = klass
-        self.instance = None
-    def __call__(self,*args,**kwds):
-        if self.instance == None:
-            self.instance = self.klass(*args,**kwds)
-        return self.instance
-
-class EnterMineAndDigForGold(SingletonDecor, State):
-    def Enter(self):
-        pass
-    
+    def Execute(self):
+        self.FSM.Execute()
