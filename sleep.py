@@ -1,4 +1,4 @@
-from state import State
+from state import *
 import time
 from random import randint
 

@@ -1,24 +1,26 @@
+from state import *
 import time
-from state import State
 from random import randint
 
 
-class Eat(State):
+
+
+class Vacuum(State):
     def __init__(self, FSM):
-        super(Eat, self).__init__(FSM)
+        super(Vacuum, self).__init__(FSM)
     
     def Enter(self):
-       
-        super(Eat, self).Enter()
+        print("Start Vacuum cleaner")
+        super(Vacuum, self).Enter()
         
     def Execute(self):
-        print("Eat")
-        
+        print("VACOOOOOOOOOOOOMING")
         if(self.startTime + self.timer <= time.process_time()):
             if not (randint(1, 3) % 2):
-                self.FSM.ToTransition("toVacuum")
-            else:
                 self.FSM.ToTransition("toSleep")
+            else:
+                self.FSM.ToTransition("toEat")
     
     def Exit(self):
-        print("Finished Eat")
+        print("Finished Vacuum")
+        

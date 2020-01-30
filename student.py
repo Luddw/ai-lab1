@@ -1,8 +1,9 @@
-from states.eat import Eat
-from states.sleep import Sleep
-from states.vacuum import Vacuum
-
+from fsm import *
 from transition import Transition
+from eat import Eat
+from vacuum import Vacuum
+from sleep import Sleep
+
 
 
 
