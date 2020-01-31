@@ -2,6 +2,7 @@ from random import randint
 import time
 from student import Student
 
+
 STARTTIME = time.monotonic()
 student = Student()
 if __name__ == "__main__":
@@ -13,10 +14,3 @@ if __name__ == "__main__":
         print("[Current time]: ", i, "s")
         student.FSM.Execute()
         print("-----------------------------")
-
-lastFrame = 0
-while True:
-    currTime = time.monotonic
-    dt = currTime - lastFrame
-    lastFrame = currTime
-    
