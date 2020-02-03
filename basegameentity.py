@@ -1,3 +1,5 @@
+from message import Message
+
 class BaseGameEntity:
     
     _nextValidID = 0
@@ -9,6 +11,15 @@ class BaseGameEntity:
 
     def __init__(self, ID):
         self._SetID(ID)
+        self.currState = None
+        self.prevState = None
+        self.globalState = None
 
     def Update(self):
+        pass
+    
+    def HandleMsg(self, msg):
+        pass
+    
+    def BackToPrevState(self):
         pass

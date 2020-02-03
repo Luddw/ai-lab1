@@ -124,9 +124,11 @@ class Sleep(State):
 
 Character = type("Char",(object,),{})
 
-class Robot(Character):
+class Student(Character):
     def __init__(self):
+        self.gold = 0
         self.FSM = FSM(self)
+        self.location = ""
         
         self.FSM.AddState("Sleep", Sleep(self.FSM))
         self.FSM.AddState("CleanDishes",CleanDishes(self.FSM))
@@ -138,18 +140,40 @@ class Robot(Character):
         
         
         self.FSM.SetState("Sleep")
-    
+    def getMoney(self):
+        self.gold += 1
+        
     def Execute(self):
         self.FSM.Execute()
 
 
+class Work(State):
+    def __init__(self, FSM):
+        super(Work, self).__init__(FSM)
+    
+    def Enter(self):
+        print("Start Vacuum cleaner")
+        super(Work, self).Enter()
+        
+    def Execute(self):
+        
+        if(self.startTime + self.timer <= time.process_time()):
+            if not (randint(1, 3) % 2):
+                self.FSM.ToTransition("toSleep")
+            else:
+                self.FSM.ToTransition("toCleanDishes")
+    
+    def Exit(self):
+        print("Finished Vacuum")
 
-robot = Robot()
+
+
+student = Student()
 for i in range(20):
     startTime = time.process_time()
     timeInterval = 1
     while(startTime + timeInterval > time.process_time()):
         pass
     print("[Current time]: ", i, "s \n")
-    robot.FSM.Execute()
+    student.FSM.Execute()
     print("-----------------------------")

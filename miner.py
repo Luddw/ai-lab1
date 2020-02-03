@@ -35,6 +35,7 @@ class Student(BaseGameEntity):
 
     def Update(self):
         if self.FSM.currentState is not None:
+            self.thirst += 1
             self.FSM.Execute()
         else:
             print("[miner.py]: STATE IS NONE, LAZY ASS")
