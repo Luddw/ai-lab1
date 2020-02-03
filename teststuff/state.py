@@ -21,72 +21,69 @@ class State:
 
 
 # Miner states
-class EnterMineAndDigForNugget(State):
+class GoToWorkAndLabour(State):
     def enter(self, entity):
-        if entity.location is not Locations.GOLDMINE:
-            print("Walking to the goldmine")
-            entity.location = Locations.GOLDMINE
+        if entity.location is not Locations.WORKPLACE:
+            print("Walking to work")
+            entity.location = Locations.WORKPLACE
 
     def execute(self, entity):
-        # Increase the gold
-        entity.increase_gold_carried(1)
+        # Getting dosh!
+        entity.increase_money(1)
 
-        # Digging is hard work
+        # Diggy diggy hål
         entity.increase_fatigue()
 
-        print('Picking up  a nugget')
+        print(str(entity.id),'Earning money')
 
         if entity.pockets_full():
-            entity.change_state(VisitBankAndDepositGold())
+            entity.change_state()
 
         if entity.is_thirsty():
             entity.change_state(QuenchThirst())
 
     def exit(self, entity):
-        print('I am leaving the gold mine with mah pockets full o sweet gold')
+        print(str(str(entity.id)),'Leaving Work! Did a good job today')
 
     def on_message(self, entity, telegram):
         return
 
 
-class GoHomeAndSleepTilRested(State):
+class GoHomeAndSleep(State):
     def enter(self, entity):
-        if entity.location is not Locations.SHACK:
+        if entity.location is not Locations.HOME:
             print('Walking home')
-            entity.change_location(Locations.SHACK)
-
-            message_dispatch = MessageDispatcher()
-            message_dispatch.dispatch_message(0, entity, entity.other_entity, MessageTypes.HI_HONEY_I_AM_HOME, '')
+            entity.change_location(Locations.HOME)
 
     def execute(self, entity):
         if entity is not entity.is_fatigue():
-            print('What a darn fantastic nap! Time to find more gold')
-            entity.change_state(EnterMineAndDigForNugget())
+            print(str(entity.id),'I slept like a log!!')
+            entity.change_state(GoToWorkAndLabour())
         else:
             entity.descrease_fatigue()
-            print('ZZZZ....')
+            print(str(entity.id),'ZZZZ....')
 
     def exit(self, entity):
         print('Leaving the house')
 
     def on_message(self, entity, telegram):
         if telegram.message_type == MessageTypes.STEW_READY:
-            print('Message handled by {} at time: {}'.format(entity.id, datetime.datetime.now()))
+            print('Message handled by {} at time: {}'.format(str(entity.id), datetime.datetime.now()))
             print('Okay hun, ahm a coming')
             entity.change_state(EatStew())
 
 
 class QuenchThirst(State):
     def enter(self, entity):
-        if entity.location is not Locations.SALOON:
-            print('Boy, ah sure is thirsty! Walking to the saloon')
-            entity.change_location(Locations.SALOON)
+        if entity.location is not Locations.TRAVVEN:
+            print('[',str(entity.id),']: Im thirsty! Walking to Schtaans bästa student pub')
+            entity.change_location(Locations.TRAVVEN)
 
     def execute(self, entity):
         if entity.is_thirsty():
-            entity.buy_and_drink_whiskey()
-            print("That's mighty fine sipping liqueur")
-            entity.change_state(EnterMineAndDigForNugget())
+            entity.drink()
+            print('[',str(entity.id),']: Thirst gone!')
+            entity.change_state(GoToWorkAndLabour())
 
     def exit(self, entity):
         print('Leaving the saloon, feeling good')
@@ -94,31 +91,6 @@ class QuenchThirst(State):
     def on_message(self, entity, telegram):
         return
 
-
-class VisitBankAndDepositGold(State):
-    def enter(self, entity):
-        if entity.location is not Locations.BANK:
-            print('Going to the bank. Yes siree')
-            entity.change_location(Locations.BANK)
-
-    def execute(self, entity):
-        entity.add_to_wealth(entity.gold_carried)
-
-        entity.set_gold_carried(0)
-
-        print('Depositing gold. Total savings now: {}'.format(entity.wealth))
-
-        if entity.wealth >= entity.COMFORT_LEVEL:
-            print('WooHoo! Rich enough for now. Back home to mah lille lady')
-            entity.change_state(GoHomeAndSleepTilRested())
-        else:
-            entity.change_state(EnterMineAndDigForNugget())
-
-    def exit(self, entity):
-        print('Leaving the bank')
-
-    def on_message(self, entity, telegram):
-        return
 
 
 class EatStew(State):
@@ -151,7 +123,7 @@ class WifeGlobalState(State):
 
     def on_message(self, entity, telegram):
         if telegram.message_type == MessageTypes.HI_HONEY_I_AM_HOME:
-            print('Message received by {} at time: {}'.format(entity.id, datetime.datetime.now()))
+            print('Message received by {} at time: {}'.format(str(entity.id), datetime.datetime.now()))
             print('Hi Honey. Let me make you some of mah fine country stew')
             entity.change_state(CookStew())
 
@@ -214,7 +186,7 @@ class CookStew(State):
 
     def on_message(self, entity, telegram):
         if telegram.message_type == MessageTypes.HI_HONEY_I_AM_HOME:
-            print('Message received by {} at time: {}'.format(entity.id, datetime.datetime.now()))
+            print('Message received by {} at time: {}'.format(str(entity.id), datetime.datetime.now()))
             print('Stew is Ready! Lets eat')
 
             message_dispatcher = MessageDispatcher()
