@@ -1,5 +1,5 @@
 from base_entity import BaseEntity
-from state import WifeGlobalState
+
 
 
 class Wife(BaseEntity):
@@ -7,7 +7,6 @@ class Wife(BaseEntity):
         super().__init__()
         self.current_state = current_state
         self.previous_state = None
-        self.global_state = WifeGlobalState()
         self.location = location
         self.is_cooking = False
         self.stress_level = 0

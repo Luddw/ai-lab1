@@ -3,8 +3,8 @@ from base_entity import BaseEntity
 
 class Student(BaseEntity):
 
-    def __init__(self, current_state=None, location=None):
-        super().__init__()
+    def __init__(self, ID, current_state=None, location=None):
+        super().__init__(ID)
         self.current_state = current_state
         self.previous_state = None
         self.global_state = None
@@ -13,7 +13,6 @@ class Student(BaseEntity):
         self.thirst = 0
         self.fatigue = 0
         self.hunger = 0
-        self.other_entity = None
         self.COMFORT_LEVEL = 5
         self.MAX_MONEY = 4
         self.THIRST_LEVEL = 5
@@ -56,6 +55,8 @@ class Student(BaseEntity):
     def pockets_full(self):
         return self.money >= self.MAX_MONEY
 
+    def spend_money(self):
+        self.money = 0
 
     def increase_thirsty(self, thirst=1):
         self.thirst += thirst
@@ -70,6 +71,8 @@ class Student(BaseEntity):
     def is_hungry(self):
         return self.hunger >= self.HUNGER_LEVEL
     
+    def eat(self):
+        self.hunger = 0
 
     def increase_fatigue(self, fatigue=1):
         self.fatigue += fatigue

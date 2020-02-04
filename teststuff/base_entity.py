@@ -1,20 +1,24 @@
-import random
-
 
 class BaseEntity:
+    
+    _nextValidID = 0
+    
+    def _SetID(self, value):
+        assert value >= BaseEntity._nextValidID, "INVALID ID, YOURE BREAKING THE LAW"
+        self.id = value
+        BaseEntity._nextValidID = self.id + 1
 
-    def __init__(self, entity_type=-1):
-        self.id = random.getrandbits(32)
-        self.entity_type = entity_type
-        self.current_state = None
-        self.previous_state = None
-        self.global_state = None
+    def __init__(self, ID, entitytype=-1):
+        self._SetID(ID)
+        self.currState = None
+        self.prevState = None
+        self.globalState = None
 
-    def update(self):
-        raise NotImplementedError
-
-    def handle_message(self, telegram):
-        raise NotImplementedError
-
-    def revert_to_previous_state(self):
-        raise NotImplementedError
+    def Update(self):
+        pass
+    
+    def HandleMsg(self, msg):
+        pass
+    
+    def BackToPrevState(self):
+        pass

@@ -1,5 +1,4 @@
 class Telegram:
-
     def __init__(self, sender, receiver, message_type, dispatch_time, extra_info):
         self.sender = sender,
         self.receiver = receiver

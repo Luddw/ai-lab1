@@ -9,7 +9,7 @@ class BaseGameEntity:
         self._m_ID = value
         BaseGameEntity._nextValidID = self._m_ID + 1
 
-    def __init__(self, ID):
+    def __init__(self, ID=1):
         self._SetID(ID)
         self.currState = None
         self.prevState = None
