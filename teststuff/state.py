@@ -19,11 +19,11 @@ class State:
         raise NotImplementedError
 
 
-# Miner states
+# agent states
 class GoToWorkAndLabour(State):
     def enter(self, entity):
         if entity.location is not Locations.WORKPLACE:
-            print("Walking to work")
+            print('[',str(entity.id),']: Walking to work')
             entity.location = Locations.WORKPLACE
 
     def execute(self, entity):
@@ -31,9 +31,36 @@ class GoToWorkAndLabour(State):
         entity.increase_money(1)
 
         # Diggy diggy hål
-        entity.increase_fatigue()
+        entity.increase_fatigue(1)
 
-        print(str(entity.id),'Earning money')
+        print('[',str(entity.id),']: Earning money')
+
+        if entity.money == 4:
+            entity.change_state(QuenchThirst())
+
+        if entity.is_thirsty():
+            entity.change_state(QuenchThirst())
+
+    def exit(self, entity):
+        print('[',str(entity.id),']: Leaving Work! Did a good job today')
+
+    def on_message(self, entity, msg):
+        return
+    
+class GoToOfficeJob(State):
+    def enter(self, entity):
+        if entity.location is not Locations.OFFICE:
+            print('[',str(entity.id),']: Walking to the Office')
+            entity.location = Locations.OFFICE
+
+    def execute(self, entity):
+        # Getting dosh!
+        entity.increase_money(2)
+
+        # Diggy diggy hål
+        entity.increase_fatigue(2)
+
+        print('[',str(entity.id),']: Tiring office job, keep Earning money!')
 
         if entity.pockets_full():
             entity.change_state(QuenchThirst())
@@ -42,7 +69,7 @@ class GoToWorkAndLabour(State):
             entity.change_state(QuenchThirst())
 
     def exit(self, entity):
-        print(str(entity.id),'Leaving Work! Did a good job today')
+        print('[',str(entity.id),']: Leaving OFFICE! Did a good job today')
 
     def on_message(self, entity, msg):
         return
@@ -51,19 +78,19 @@ class GoToWorkAndLabour(State):
 class GoHomeAndSleep(State):
     def enter(self, entity):
         if entity.location is not Locations.HOME:
-            print('Walking home')
+            print('[',str(entity.id),']: Walking home')
             entity.change_location(Locations.HOME)
 
     def execute(self, entity):
         if entity is not entity.is_fatigue():
-            print(str(entity.id),'I slept like a log!!')
+            print('[',str(entity.id),'I slept like a log!!')
             entity.change_state(GoToWorkAndLabour())
         else:
             entity.descrease_fatigue()
-            print(str(entity.id),'ZZZZ....')
+            print('[',str(entity.id),'ZZZZ....')
 
     def exit(self, entity):
-        print('Leaving the house')
+        print('[',str(entity.id),']: Leaving the house')
 
     def on_message(self, entity, msg):
         if msg.message_type == MessageTypes.STEW_READY:
@@ -72,33 +99,34 @@ class GoHomeAndSleep(State):
 
 class Shopping(State):
     def enter(self, entity):
-        print(str(entity.id),'Spending my hard earned cash!')
+        print('[',str(entity.id),'Spending my hard earned cash!')
 
     def execute(self, entity):
-        print(str(entity.id),'Spending money in the shop')
+        print('[',str(entity.id),'Spending money in the shop')
         entity.spend_money()
         entity.revert_to_previous_state()
 
     def exit(self, entity):
-        print(str(entity.id),'going back to whatever i was doing')
+        print('[',str(entity.id),'going back to whatever i was doing')
 
     def on_message(self, entity, msg):
         return
     
 class QuenchThirst(State):
     def enter(self, entity):
-        if entity.location is not Locations.TRAVVEN:
-            print('[',str(entity.id),']: "Im thirsty! Walking to Schtaans bästa student pub"')
-            entity.change_location(Locations.TRAVVEN)
+        print('[',str(entity.id),']: Im thirsty!')
+        #if entity.location is not Locations.TRAVVEN:
+         #   print('[',str(entity.id),']: Im thirsty! Walking to Schtaans bästa student pub')
+           # entity.change_location(Locations.TRAVVEN)
 
     def execute(self, entity):
         if entity.is_thirsty():
             entity.drink()
-            print('[',str(entity.id),']: Thirst gone!')
-            entity.change_state(GoToWorkAndLabour())
+            print('[',str(entity.id),']: GLUGG GLUGG GLUGG!')
+            entity.revert_to_previous_state()
 
     def exit(self, entity):
-        print('Leaving travven!')
+        print('[',str(entity.id),']: Thirst !')
 
     def on_message(self, entity, msg):
         return
@@ -108,15 +136,15 @@ class QuenchThirst(State):
 class EatFood(State):
 
     def enter(self, entity):
-        print(str(entity.id),'Im very hungry')
+        print('[',str(entity.id),'Im very hungry')
 
     def execute(self, entity):
-        print(str(entity.id),'NOM NOM NOM')
+        print('[',str(entity.id),'NOM NOM NOM')
         entity.eat()
         entity.revert_to_previous_state()
 
     def exit(self, entity):
-        print(str(entity.id),'going back to whatever i was doing')
+        print('[',str(entity.id),'going back to whatever i was doing')
 
     def on_message(self, entity, msg):
         return

@@ -14,7 +14,7 @@ class Student(BaseEntity):
         self.fatigue = 0
         self.hunger = 0
         self.COMFORT_LEVEL = 5
-        self.MAX_MONEY = 4
+        self.MAX_MONEY = 10
         self.THIRST_LEVEL = 5
         self.HUNGER_LEVEL = 5
         self.TIREDNESS_THRESHOLD = 5
@@ -74,7 +74,7 @@ class Student(BaseEntity):
     def eat(self):
         self.hunger = 0
 
-    def increase_fatigue(self, fatigue=1):
+    def increase_fatigue(self, fatigue):
         self.fatigue += fatigue
 
     def decrease_fatigue(self, fatigue=1):
