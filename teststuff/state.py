@@ -18,7 +18,16 @@ class State:
     def on_message(self, entity, msg):
         raise NotImplementedError
 
-
+class StudentGlobalState(State):
+    def enter(self, entity):
+        return
+    
+    def execute(self, entity):
+        pass
+    
+    def exit(self, entity):
+        return
+        
 # agent states
 class GoToWorkAndLabour(State):
     def enter(self, entity):
