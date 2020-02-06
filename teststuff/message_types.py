@@ -2,14 +2,17 @@ from enum import Enum
 
 
 class MessageTypes(Enum):
-    HI_HONEY_I_AM_HOME = 1
-    STEW_READY = 2
+    CAN_GO = 1
+    CANT_GO = 2
+    SOCIAL_REQUEST = 3
 
 
 def message_type_to_string(message_type):
-    if message_type == MessageTypes.HI_HONEY_I_AM_HOME:
-        return 'Hi honey I am home'
-    elif message_type == MessageTypes.STEW_READY:
-        return 'Stew Ready'
+    if message_type == MessageTypes.CAN_GO:
+        return "I can go!"
+    elif message_type == MessageTypes.CANT_GO:
+        return "Sorry I can't go!"
+    elif message_type == MessageTypes.SOCIAL_REQUEST:
+        return "do you want to hang out?"
     else:
-        return 'Not recognised'
+        return 'msgtype doesnt exist'
