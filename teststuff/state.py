@@ -23,10 +23,14 @@ class StudentGlobalState(State):
         return
     
     def execute(self, entity):
-        pass
+        if entity.thirst > 10 and entity.current_state is not QuenchThirst():
+            pass
     
     def exit(self, entity):
         return
+    def on_message(self, msg):
+        if msg.message_type =
+        
         
 # agent states
 class GoToWorkAndLabour(State):
