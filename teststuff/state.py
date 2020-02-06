@@ -26,17 +26,20 @@ class StudentGlobalState(State):
         entity.increase_thirst()
         entity.increase_hunger()
         
-        if entity.fatigue <= 0:
-            if entity.thirst > 10 and entity.current_state is not QuenchThirst():
-                entity.change_state(QuenchThirst())
-                pass
-            pass
+        if entity.is_thirsty():
+            entity.change_state(QuenchThirst())
         
-        if entity.money == entity.MAX_MONEY:
+        elif entity.is_tired():
+            entity.change_state(GoHomeAndSleep())
+        
+        elif entity.is_rich():
             entity.change_state(Shopping())
         
-        if entity.fatigue >= 50:
-            entity.change_state(GoHomeAndSleep())
+        elif not entity.is_rich():
+            entity.change_state(GoToWorkAndLabour())
+
+        elif entity.money >= entity.MAX_MONEY:
+            entity.change_state(Shopping())
     
     def exit(self, entity):
         return
@@ -56,12 +59,6 @@ class GoToWorkAndLabour(State):
         print('[',str(entity.id),']: Earning money')
         entity.increase_fatigue(1)
         entity.increase_money(1)
-
-        if entity.money == entity.MAX_MONEY:
-            entity.change_state(QuenchThirst())
-
-        if entity.is_thirsty():
-            entity.change_state(QuenchThirst())
 
     def exit(self, entity):
         print('[',str(entity.id),']: Leaving Work! Did a good job today')
@@ -104,12 +101,8 @@ class GoHomeAndSleep(State):
             entity.change_location(Locations.HOME)
 
     def execute(self, entity):
-        if entity is not entity.is_fatigue():
-            print('[',str(entity.id),']: I slept pretty well')
-            entity.change_state(GoToWorkAndLabour())
-        else:
-            entity.descrease_fatigue()
-            print('[',str(entity.id),']: ZZZZ....')
+            entity.decrease_fatigue()
+            print('[',str(entity.id),']: sleeping ZZZZ....')
 
     def exit(self, entity):
         print('[',str(entity.id),']: Leaving the house')
@@ -122,15 +115,14 @@ class GoHomeAndSleep(State):
 
 class Shopping(State):
     def enter(self, entity):
-        print('[',str(entity.id),'Spending my hard earned cash!')
+        print('[',str(entity.id),']: Spending my hard earned cash!')
 
     def execute(self, entity):
-        print('[',str(entity.id),'Spending money in the shop')
+        print('[',str(entity.id),']: Spending money in the shop')
         entity.spend_money()
-        entity.revert_to_previous_state()
 
     def exit(self, entity):
-        print('[',str(entity.id),'going back to whatever i was doing')
+        print('[',str(entity.id),']: going back to whatever i was doing')
 
     def on_message(self, entity, msg):
         return

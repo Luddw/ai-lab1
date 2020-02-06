@@ -3,11 +3,11 @@ from base_entity import BaseEntity
 
 class Student(BaseEntity):
 
-    def __init__(self, ID, current_state=None, location=None):
+    def __init__(self, ID, current_state=None, location=None, globalstate=None):
         super().__init__(ID)
         self.current_state = current_state
         self.previous_state = None
-        self.global_state = None
+        self.global_state = globalstate
         self.location = location
         self.money = 0
         self.thirst = 0
@@ -17,12 +17,11 @@ class Student(BaseEntity):
         self.MAX_MONEY = 10
         self.THIRST_LEVEL = 5
         self.HUNGER_LEVEL = 5
-        self.TIREDNESS_THRESHOLD = 5
+        self.TIREDNESS_THRESHOLD = 10
 
     def update(self):
-        self.thirst += 1
-        self.hunger += 1
         if self.current_state:
+            self.global_state.execute(self)
             self.current_state.execute(self)
 
     def handle_message(self, telegram):
@@ -58,7 +57,7 @@ class Student(BaseEntity):
     def spend_money(self):
         self.money = 0
 
-    def increase_thirsty(self, thirst=1):
+    def increase_thirst(self, thirst=1):
         self.thirst += thirst
 
     def is_thirsty(self):
@@ -77,12 +76,15 @@ class Student(BaseEntity):
     def increase_fatigue(self, fatigue):
         self.fatigue += fatigue
 
-    def decrease_fatigue(self, fatigue=1):
-        self.fatigue -= fatigue
+    def decrease_fatigue(self):
+        self.fatigue -= 1
 
     def is_tired(self):
         return self.fatigue >= self.TIREDNESS_THRESHOLD
 
     def drink(self):
         self.thirst = 0
+    
+    def is_rich(self):
+        return self.money >= self.MAX_MONEY 
 
