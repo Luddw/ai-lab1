@@ -1,7 +1,7 @@
 from base_entity import BaseEntity
 
 
-class Student(BaseEntity):
+class Agent(BaseEntity):
 
     def __init__(self, ID, current_state=None, location=None, globalstate=None):
         super().__init__(ID)
@@ -76,8 +76,8 @@ class Student(BaseEntity):
     def increase_fatigue(self, fatigue):
         self.fatigue += fatigue
 
-    def decrease_fatigue(self):
-        self.fatigue -= 1
+    def decrease_fatigue(self, rest):
+        self.fatigue -= rest
 
     def is_tired(self):
         return self.fatigue >= self.TIREDNESS_THRESHOLD

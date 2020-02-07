@@ -4,7 +4,7 @@ from locations import Locations
 from message_dispatcher import MessageDispatcher
 from message_types import MessageTypes
 
-
+# base state class that all states inherit from
 class State:
     def enter(self, entity):
         raise NotImplementedError
@@ -18,7 +18,8 @@ class State:
     def on_message(self, entity, msg):
         raise NotImplementedError
 
-class StudentGlobalState(State):
+# global state
+class GlobalState(State):
     def enter(self, entity):
         return
     
@@ -46,9 +47,22 @@ class StudentGlobalState(State):
     def on_message(self, msg):
         if msg.message_type :
             pass
-        
-        
+
 # agent states
+class Socialize(State):
+    def enter(self, entity):
+        return
+
+    def execute(self, entity, tick_size):
+        return
+
+    def exit(self, entity):
+        return
+
+    def on_message(self, entity, msg):
+        return
+    
+
 class GoToWorkAndLabour(State):
     def enter(self, entity):
         if entity.location is not Locations.WORKPLACE:
@@ -74,10 +88,10 @@ class GoToOfficeJob(State):
 
     def execute(self, entity, tick_size):
         # Getting dosh!
-        entity.increase_money(2)
+        entity.increase_money(2*tick_size)
 
         # Diggy diggy hål
-        entity.increase_fatigue(2)
+        entity.increase_fatigue(2*tick_size)
 
         print('[',str(entity.id),']: Tiring office job, keep Earning money!')
 
@@ -101,7 +115,7 @@ class GoHomeAndSleep(State):
             entity.change_location(Locations.HOME)
 
     def execute(self, entity, tick_size):
-            entity.decrease_fatigue()
+            entity.decrease_fatigue(1)
             print('[',str(entity.id),']: sleeping ZZZZ....')
 
     def exit(self, entity):

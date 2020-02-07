@@ -1,6 +1,6 @@
 from locations import Locations
-from miner import Student
-from state import StudentGlobalState, GoToWorkAndLabour
+from agent import Agent
+from state import GlobalState, GoToWorkAndLabour
 from wife import Wife
 import time
 class EntityManager:
@@ -20,11 +20,11 @@ class EntityManager:
 
 entmanager = EntityManager(1)
 def main():
-    miner = Student(1,current_state=GoToWorkAndLabour(), location=Locations.HOME, globalstate=StudentGlobalState())
-    miner1 = Student(2,current_state=GoToWorkAndLabour(), location=Locations.HOME)
+    miner = Agent(1,current_state=GoToWorkAndLabour(), location=Locations.HOME, globalstate=GlobalState())
+    miner1 = Agent(2,current_state=GoToWorkAndLabour(), location=Locations.HOME)
     entmanager.add_entity(miner)
 
     for i in range(100):
-        entmanager.update(1)
+        entmanager.update(0.5)
 if __name__ == '__main__':
     main()
