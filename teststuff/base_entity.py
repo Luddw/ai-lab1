@@ -3,22 +3,22 @@ class BaseEntity:
     
     _nextValidID = 0
     
-    def _SetID(self, value):
+    def _setID(self, value):
         assert value >= BaseEntity._nextValidID, "INVALID ID, YOURE BREAKING THE LAW"
         self.id = value
         BaseEntity._nextValidID = self.id + 1
 
     def __init__(self, ID, entitytype=-1):
-        self._SetID(ID)
+        self._setID(ID)
         self.currState = None
         self.prevState = None
         self.globalState = None
 
-    def Update(self):
+    def update(self):
         pass
     
-    def HandleMsg(self, msg):
+    def handleMsg(self, msg):
         pass
     
-    def BackToPrevState(self):
+    def backToPrevState(self):
         pass

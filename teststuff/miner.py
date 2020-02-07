@@ -19,10 +19,10 @@ class Student(BaseEntity):
         self.HUNGER_LEVEL = 5
         self.TIREDNESS_THRESHOLD = 10
 
-    def update(self):
+    def update(self, tick_size):
         if self.current_state:
-            self.global_state.execute(self)
-            self.current_state.execute(self)
+            self.global_state.execute(self, tick_size)
+            self.current_state.execute(self, tick_size)
 
     def handle_message(self, telegram):
         self.current_state.on_message(self, telegram)

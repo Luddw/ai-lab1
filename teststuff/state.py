@@ -9,7 +9,7 @@ class State:
     def enter(self, entity):
         raise NotImplementedError
 
-    def execute(self, entity):
+    def execute(self, entity, tick_size):
         raise NotImplementedError
 
     def exit(self, entity):
@@ -22,7 +22,7 @@ class StudentGlobalState(State):
     def enter(self, entity):
         return
     
-    def execute(self, entity):
+    def execute(self, entity, tick_size):
         entity.increase_thirst()
         entity.increase_hunger()
         
@@ -55,9 +55,9 @@ class GoToWorkAndLabour(State):
             print('[',str(entity.id),']: Walking to work')
             entity.location = Locations.WORKPLACE
 
-    def execute(self, entity):
+    def execute(self, entity, tick_size):
         print('[',str(entity.id),']: Earning money')
-        entity.increase_fatigue(1)
+        entity.increase_fatigue(1*tick_size)
         entity.increase_money(1)
 
     def exit(self, entity):
@@ -72,7 +72,7 @@ class GoToOfficeJob(State):
             print('[',str(entity.id),']: Walking to the Office')
             entity.location = Locations.OFFICE
 
-    def execute(self, entity):
+    def execute(self, entity, tick_size):
         # Getting dosh!
         entity.increase_money(2)
 
@@ -100,7 +100,7 @@ class GoHomeAndSleep(State):
             print('[',str(entity.id),']: Walking home to Sleep')
             entity.change_location(Locations.HOME)
 
-    def execute(self, entity):
+    def execute(self, entity, tick_size):
             entity.decrease_fatigue()
             print('[',str(entity.id),']: sleeping ZZZZ....')
 
@@ -117,7 +117,7 @@ class Shopping(State):
     def enter(self, entity):
         print('[',str(entity.id),']: Spending my hard earned cash!')
 
-    def execute(self, entity):
+    def execute(self, entity, tick_size):
         print('[',str(entity.id),']: Spending money in the shop')
         entity.spend_money()
 
@@ -134,7 +134,7 @@ class QuenchThirst(State):
          #   print('[',str(entity.id),']: Im thirsty! Walking to Schtaans bästa student pub')
            # entity.change_location(Locations.TRAVVEN)
 
-    def execute(self, entity):
+    def execute(self, entity, tick_size):
         if entity.is_thirsty():
             entity.drink()
             print('[',str(entity.id),']: GLUGG GLUGG GLUGG!')
@@ -153,7 +153,7 @@ class EatFood(State):
     def enter(self, entity):
         print('[',str(entity.id),'Im very hungry')
 
-    def execute(self, entity):
+    def execute(self, entity, tick_size):
         print('[',str(entity.id),'NOM NOM NOM')
         entity.eat()
         entity.revert_to_previous_state()
