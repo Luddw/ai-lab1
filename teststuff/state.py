@@ -24,8 +24,8 @@ class GlobalState(State):
         return
     
     def execute(self, entity, tick_size):
-        entity.increase_thirst()
-        entity.increase_hunger()
+        entity.increase_thirst(1*tick_size)
+        entity.increase_hunger(1*tick_size)
         
         if entity.is_thirsty():
             entity.change_state(QuenchThirst())
@@ -36,7 +36,7 @@ class GlobalState(State):
         elif entity.is_rich():
             entity.change_state(Shopping())
         
-        elif not entity.is_rich():
+        elif not entity.is_rich() and entity.current_state is not GoToWorkAndLabour():
             entity.change_state(GoToWorkAndLabour())
 
         elif entity.money >= entity.MAX_MONEY:
@@ -72,10 +72,11 @@ class GoToWorkAndLabour(State):
     def execute(self, entity, tick_size):
         print('[',str(entity.id),']: Earning money')
         entity.increase_fatigue(1*tick_size)
-        entity.increase_money(1)
+        entity.increase_money(1*tick_size)
 
     def exit(self, entity):
-        print('[',str(entity.id),']: Leaving Work! Did a good job today')
+        if entity.is_rich():
+            print('[',str(entity.id),']: Leaving Work! Did a good job today')
 
     def on_message(self, entity, msg):
         return

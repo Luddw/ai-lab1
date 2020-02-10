@@ -17,7 +17,7 @@ class Agent(BaseEntity):
         self.MAX_MONEY = 10
         self.THIRST_LEVEL = 5
         self.HUNGER_LEVEL = 5
-        self.TIREDNESS_THRESHOLD = 10
+        self.TIREDNESS_THRESHOLD = 40
 
     def update(self, tick_size):
         if self.current_state:

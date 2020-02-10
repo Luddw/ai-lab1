@@ -15,11 +15,11 @@ class BaseGameEntity:
         self.prevState = None
         self.globalState = None
 
-    def Update(self):
+    def update(self):
         pass
     
-    def HandleMsg(self, msg):
+    def handleMsg(self, msg):
         pass
     
-    def BackToPrevState(self):
+    def backToPrevState(self):
         pass
