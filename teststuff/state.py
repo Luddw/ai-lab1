@@ -1,7 +1,6 @@
 import datetime
 import random
 from locations import Locations
-from message_dispatcher import MessageDispatcher
 from message_types import MessageTypes
 from telegram import Telegram
 
@@ -40,9 +39,6 @@ class GlobalState(State):
         elif not entity.is_rich() and entity.current_state is not GoToWorkAndLabour():
             entity.change_state(GoToWorkAndLabour())
 
-        elif entity.money >= entity.MAX_MONEY:
-            entity.change_state(Shopping())
-
         elif entity.is_lonley:
             entity
     def exit(self, entity):
@@ -67,7 +63,6 @@ class Socialize(State):
     
 
 class GoToWorkAndLabour(State):
-    workhr = 8
     def enter(self, entity, tick_size):
         work_msg_self = Telegram(entity.id, entity.id, MessageTypes.WORK_SELF)
         entity.manager.dispatch_message(work_msg_self, 8) #tick_size as msg delay
@@ -86,24 +81,22 @@ class GoToWorkAndLabour(State):
 
     def on_message(self, entity, msg):
         if msg.type is MessageTypes.WORK_SELF:
-            
+            entity.change_state(Shopping())
             pass
             
     
 class GoToOfficeJob(State):
     def enter(self, entity):
+        work_msg_self = Telegram(entity.id, entity.id, MessageTypes.WORK_SELF)
+        entity.manager.dispatch_message(work_msg_self, 6) #tick_size as msg delay
         if entity.location is not Locations.OFFICE:
             print('[',str(entity.id),']: Walking to the Office')
             entity.location = Locations.OFFICE
 
     def execute(self, entity, tick_size):
-        # Getting dosh!
         entity.increase_money(2*tick_size)
-
-        # Diggy diggy hål
         entity.increase_fatigue(2*tick_size)
-
-        print('[',str(entity.id),']: Tiring office job, keep Earning money!')
+        print('[',str(entity.id),']: pencil pusher getting money!')
 
         if entity.pockets_full():
             entity.change_state(QuenchThirst())
