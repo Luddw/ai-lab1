@@ -3,6 +3,7 @@ import random
 from locations import Locations
 from message_dispatcher import MessageDispatcher
 from message_types import MessageTypes
+from telegram import Telegram
 
 # base state class that all states inherit from
 class State:
@@ -66,10 +67,11 @@ class Socialize(State):
     
 
 class GoToWorkAndLabour(State):
-    def enter(self, entity):
+    workhr = 8
+    def enter(self, entity, tick_size):
+        work_msg_self = Telegram(entity.id, entity.id, MessageTypes.WORK_SELF)
+        entity.manager.dispatch_message(work_msg_self, 8) #tick_size as msg delay
         if entity.location is not Locations.WORKPLACE:
-            messagedisp = MessageDispatcher()
-            messagedisp.dispatch_message(delay, entity,entity,MessageTypes.WORK_SELF,'')
             print('[',str(entity.id),']: Walking to work')
             entity.location = Locations.WORKPLACE
 
@@ -84,6 +86,8 @@ class GoToWorkAndLabour(State):
 
     def on_message(self, entity, msg):
         if msg.type is MessageTypes.WORK_SELF:
+            
+            pass
             
     
 class GoToOfficeJob(State):
@@ -171,15 +175,15 @@ class QuenchThirst(State):
 class EatFood(State):
 
     def enter(self, entity):
-        print('[',str(entity.id),'Im very hungry')
+        print('[',str(entity.id),']: Im very hungry')
 
     def execute(self, entity, tick_size):
-        print('[',str(entity.id),'NOM NOM NOM')
+        print('[',str(entity.id),']: NOM NOM NOM')
         entity.eat()
         entity.revert_to_previous_state()
 
     def exit(self, entity):
-        print('[',str(entity.id),'going back to whatever i was doing')
+        print('[',str(entity.id),']: going back to whatever i was doing')
 
     def on_message(self, entity, msg):
         return

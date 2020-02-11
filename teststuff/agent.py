@@ -22,9 +22,11 @@ class Agent(BaseEntity):
         self.TIREDNESS_THRESHOLD = 40
 
     def update(self, tick_size):
-        if self.current_state:
+        if self.global_state is not None:
             self.global_state.execute(self, tick_size)
+        if self.current_state is not None:
             self.current_state.execute(self, tick_size)
+
 
     def handle_message(self, telegram):
         self.current_state.on_message(self, telegram)

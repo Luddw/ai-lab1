@@ -13,7 +13,7 @@ class BaseEntity:
         self.currState = None
         self.prevState = None
         self.globalState = None
-
+        self.manager = None
     def update(self):
         pass
     
