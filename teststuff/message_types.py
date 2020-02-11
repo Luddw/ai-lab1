@@ -5,6 +5,7 @@ class MessageTypes(Enum):
     CAN_GO = 1
     CANT_GO = 2
     SOCIAL_REQUEST = 3
+    WORK_SELF = 4
 
 
 def message_type_to_string(message_type):

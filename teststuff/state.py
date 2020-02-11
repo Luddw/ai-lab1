@@ -41,7 +41,9 @@ class GlobalState(State):
 
         elif entity.money >= entity.MAX_MONEY:
             entity.change_state(Shopping())
-    
+
+        elif entity.is_lonley:
+            entity
     def exit(self, entity):
         return
     def on_message(self, msg):
@@ -66,6 +68,8 @@ class Socialize(State):
 class GoToWorkAndLabour(State):
     def enter(self, entity):
         if entity.location is not Locations.WORKPLACE:
+            messagedisp = MessageDispatcher()
+            messagedisp.dispatch_message(delay, entity,entity,MessageTypes.WORK_SELF,'')
             print('[',str(entity.id),']: Walking to work')
             entity.location = Locations.WORKPLACE
 
@@ -79,7 +83,8 @@ class GoToWorkAndLabour(State):
             print('[',str(entity.id),']: Leaving Work! Did a good job today')
 
     def on_message(self, entity, msg):
-        return
+        if msg.type is MessageTypes.WORK_SELF:
+            
     
 class GoToOfficeJob(State):
     def enter(self, entity):

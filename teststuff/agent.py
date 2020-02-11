@@ -13,10 +13,12 @@ class Agent(BaseEntity):
         self.thirst = 0
         self.fatigue = 0
         self.hunger = 0
+        self.lonley = 0
         self.COMFORT_LEVEL = 5
         self.MAX_MONEY = 10
         self.THIRST_LEVEL = 5
         self.HUNGER_LEVEL = 5
+        self.LONLEY_THRESHOLD = 10
         self.TIREDNESS_THRESHOLD = 40
 
     def update(self, tick_size):
@@ -88,3 +90,5 @@ class Agent(BaseEntity):
     def is_rich(self):
         return self.money >= self.MAX_MONEY 
 
+    def is_lonley(self):
+        return self.lonley >= self.LONLEY_THRESHOLD
