@@ -9,7 +9,7 @@ entmanager = EntityManager(1)
 def main():
     student = Agent(1,current_state=GoToWorkAndLabour(), location=Locations.HOME, globalstate=GlobalState())
     stud = Agent(2,current_state=GoToWorkAndLabour(), location=Locations.HOME)
-    entmanager.add_entity(miner)
+    entmanager.add_entity(student)
 
     for i in range(100):
         entmanager.update(0.5)
