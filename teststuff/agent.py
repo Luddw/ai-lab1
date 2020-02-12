@@ -16,7 +16,7 @@ class Agent(BaseEntity):
         self.lonley = 0
         self.COMFORT_LEVEL = 5
         self.MAX_MONEY = 10
-        self.THIRST_LEVEL = 5
+        self.THIRST_LEVEL = 10
         self.HUNGER_LEVEL = 5
         self.LONLEY_THRESHOLD = 10
         self.TIREDNESS_THRESHOLD = 40
@@ -34,10 +34,9 @@ class Agent(BaseEntity):
     def change_state(self, new_state):
         if not self.current_state and not new_state:
             return
+        self.previous_state = self.current_state
 
         self.current_state.exit(self)
-
-        self.previous_state = self.current_state
 
         self.current_state = new_state
 

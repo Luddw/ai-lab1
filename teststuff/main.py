@@ -1,6 +1,6 @@
 from locations import Locations
 from agent import Agent
-from state import GlobalState, GoToWorkAndLabour
+from state import GlobalState, GoToWorkAndLabour, Shopping
 from wife import Wife
 import time
 from entity_manager import EntityManager
@@ -12,7 +12,7 @@ def main():
     entmanager.add_entity(student)
 
     for i in range(100):
-        entmanager.update(0.5)
+        entmanager.update(1)
         
 if __name__ == '__main__':
     main()

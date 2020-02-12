@@ -14,6 +14,7 @@ class BaseEntity:
         self.prevState = None
         self.globalState = None
         self.manager = None
+        
     def update(self):
         pass
     

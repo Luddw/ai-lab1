@@ -26,21 +26,14 @@ class GlobalState(State):
     def execute(self, entity, tick_size):
         entity.increase_thirst(1*tick_size)
         entity.increase_hunger(1*tick_size)
+        entity.increase_fatigue(1*tick_size)
         
         if entity.is_thirsty():
             entity.change_state(QuenchThirst())
-        
-        elif entity.is_tired():
-            entity.change_state(GoHomeAndSleep())
-        
-        elif entity.is_rich():
-            entity.change_state(Shopping())
-        
-        elif not entity.is_rich() and entity.current_state is not GoToWorkAndLabour():
-            entity.change_state(GoToWorkAndLabour())
-
-        elif entity.is_lonley:
-            entity
+        elif entity.is_hungry():
+            entity.change_state(EatFood())        
+            
+            
     def exit(self, entity):
         return
     def on_message(self, msg):
@@ -63,7 +56,7 @@ class Socialize(State):
     
 
 class GoToWorkAndLabour(State):
-    def enter(self, entity, tick_size):
+    def enter(self, entity):
         work_msg_self = Telegram(entity.id, entity.id, MessageTypes.WORK_SELF)
         entity.manager.dispatch_message(work_msg_self, 8) #tick_size as msg delay
         if entity.location is not Locations.WORKPLACE:
@@ -72,7 +65,6 @@ class GoToWorkAndLabour(State):
 
     def execute(self, entity, tick_size):
         print('[',str(entity.id),']: Earning money')
-        entity.increase_fatigue(1*tick_size)
         entity.increase_money(1*tick_size)
 
     def exit(self, entity):
@@ -88,14 +80,13 @@ class GoToWorkAndLabour(State):
 class GoToOfficeJob(State):
     def enter(self, entity):
         work_msg_self = Telegram(entity.id, entity.id, MessageTypes.WORK_SELF)
-        entity.manager.dispatch_message(work_msg_self, 6) #tick_size as msg delay
+        entity.manager.dispatch_message(work_msg_self, 6) 
         if entity.location is not Locations.OFFICE:
             print('[',str(entity.id),']: Walking to the Office')
             entity.location = Locations.OFFICE
 
     def execute(self, entity, tick_size):
         entity.increase_money(2*tick_size)
-        entity.increase_fatigue(2*tick_size)
         print('[',str(entity.id),']: pencil pusher getting money!')
 
         if entity.pockets_full():
@@ -113,12 +104,14 @@ class GoToOfficeJob(State):
 
 class GoHomeAndSleep(State):
     def enter(self, entity):
+        alarm_clock_msg = Telegram(entity.id, entity.id, MessageTypes.ALARM_CLOCK)
+        entity.manager.dispatch_message(alarm_clock_msg, 8) #tick_size as msg delay
         if entity.location is not Locations.HOME:
             print('[',str(entity.id),']: Walking home to Sleep')
             entity.change_location(Locations.HOME)
 
     def execute(self, entity, tick_size):
-            entity.decrease_fatigue(1)
+            entity.decrease_fatigue(1*tick_size)
             print('[',str(entity.id),']: sleeping ZZZZ....')
 
     def exit(self, entity):
@@ -126,9 +119,9 @@ class GoHomeAndSleep(State):
 
     #TODO messagesys for state
     def on_message(self, entity, msg):
-        if msg.message_type:
-            print('Message handled by {} at time: {}'.format(str(entity.id), datetime.datetime.now()))
-            entity.change_state(EatFood())
+        if msg.message_type is MessageTypes.ALARM_CLOCK:
+            entity.change_state(GoToWorkAndLabour())
+
 
 class Shopping(State):
     def enter(self, entity):
@@ -139,6 +132,7 @@ class Shopping(State):
         entity.spend_money()
 
     def exit(self, entity):
+        entity.change_state(GoHomeAndSleep())
         print('[',str(entity.id),']: going back to whatever i was doing')
 
     def on_message(self, entity, msg):
@@ -152,11 +146,9 @@ class QuenchThirst(State):
            # entity.change_location(Locations.TRAVVEN)
 
     def execute(self, entity, tick_size):
-        if entity.is_thirsty():
             entity.drink()
             print('[',str(entity.id),']: GLUGG GLUGG GLUGG!')
             entity.revert_to_previous_state()
-
     def exit(self, entity):
         print('[',str(entity.id),']: Thirst g o n e !')
 
