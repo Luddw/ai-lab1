@@ -36,8 +36,8 @@ class GlobalState(State):
             
     def exit(self, entity):
         return
-    def on_message(self, msg):
-        if msg.message_type :
+    def on_message(self, entity, msg):
+        if msg.message_type is MessageTypes.SOCIAL_REQUEST:
             pass
 
 # agent states
@@ -133,9 +133,9 @@ class Shopping(State):
     def execute(self, entity, tick_size):
         print('[',str(entity.id),']: Spending money in the shop')
         entity.spend_money()
+        entity.change_state(GoHomeAndSleep())
 
     def exit(self, entity):
-        entity.change_state(GoHomeAndSleep())
         print('[',str(entity.id),']: going back to whatever i was doing')
 
     def on_message(self, entity, msg):
