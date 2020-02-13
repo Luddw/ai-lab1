@@ -16,7 +16,7 @@ class State:
         raise NotImplementedError
 
     def on_message(self, entity, msg):
-        raise NotImplementedError
+        return False
 
 # global state
 class GlobalState(State):
@@ -37,7 +37,7 @@ class GlobalState(State):
     def exit(self, entity):
         return
     def on_message(self, msg):
-        if msg.message_type :
+        if msg.message_type is MessageTypes.HANG_OUT:
             pass
 
 # agent states
@@ -74,6 +74,7 @@ class GoToWorkAndLabour(State):
     def on_message(self, entity, msg):
         if msg.type is MessageTypes.WORK_SELF:
             entity.change_state(Shopping())
+            return True
             pass
             
     

@@ -30,6 +30,7 @@ class Agent(BaseEntity):
 
     def handle_message(self, telegram):
         self.current_state.on_message(self, telegram)
+        self.global_state.on
 
     def change_state(self, new_state):
         if not self.current_state and not new_state:
