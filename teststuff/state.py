@@ -16,7 +16,7 @@ class State:
         raise NotImplementedError
 
     def on_message(self, entity, msg):
-        return False
+        raise NotImplementedError
 
 # global state
 class GlobalState(State):
@@ -36,8 +36,8 @@ class GlobalState(State):
             
     def exit(self, entity):
         return
-    def on_message(self, msg):
-        if msg.message_type is MessageTypes.HANG_OUT:
+    def on_message(self, entity, msg):
+        if msg.message_type is MessageTypes.SOCIAL_REQUEST:
             pass
 
 # agent states
@@ -72,10 +72,10 @@ class GoToWorkAndLabour(State):
             print('[',str(entity.id),']: Leaving Work! Did a good job today')
 
     def on_message(self, entity, msg):
-        if msg.type is MessageTypes.WORK_SELF:
+        if msg.message_type is MessageTypes.WORK_SELF:
             entity.change_state(Shopping())
             return True
-            pass
+        return False
             
     
 class GoToOfficeJob(State):
@@ -122,6 +122,8 @@ class GoHomeAndSleep(State):
     def on_message(self, entity, msg):
         if msg.message_type is MessageTypes.ALARM_CLOCK:
             entity.change_state(GoToWorkAndLabour())
+            return True
+        return False
 
 
 class Shopping(State):
@@ -131,9 +133,9 @@ class Shopping(State):
     def execute(self, entity, tick_size):
         print('[',str(entity.id),']: Spending money in the shop')
         entity.spend_money()
+        entity.change_state(GoHomeAndSleep())
 
     def exit(self, entity):
-        entity.change_state(GoHomeAndSleep())
         print('[',str(entity.id),']: going back to whatever i was doing')
 
     def on_message(self, entity, msg):

@@ -16,6 +16,7 @@ class EntityManager:
     def update(self, tick_size):
         for i in self.entities:
             self.current_ticks += tick_size
+            self.discharge_delayed()
             self.entities[i].update(tick_size)
     
     def get_agent_from_id(self, agent_id):

@@ -11,7 +11,7 @@ def main():
     stud = Agent(2,current_state=GoToWorkAndLabour(), location=Locations.HOME)
     entmanager.add_entity(student)
 
-    for i in range(100):
+    for i in range(50):
         entmanager.update(1)
         
 if __name__ == '__main__':
