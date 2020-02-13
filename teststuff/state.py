@@ -38,7 +38,7 @@ class GlobalState(State):
         return
     def on_message(self, entity, msg):
         if msg.message_type is MessageTypes.SOCIAL_REQUEST:
-            pass
+            pass    
 
 # agent states
 class Socialize(State):
