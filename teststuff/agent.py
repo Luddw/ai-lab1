@@ -29,7 +29,12 @@ class Agent(BaseEntity):
 
 
     def handle_message(self, telegram):
-        self.current_state.on_message(self, telegram)
+        message_deliviered = False
+        if self.current_state.on_message(self, telegram):
+            message_deliviered = True
+        if message_deliviered is False:
+            self.global_state.on_message(self, telegram)
+            
 
     def change_state(self, new_state):
         if not self.current_state and not new_state:
@@ -66,7 +71,6 @@ class Agent(BaseEntity):
     def is_thirsty(self):
         return self.thirst >= self.THIRST_LEVEL
 
-
     def increase_hunger(self, hunger=1):
         self.hunger += hunger
 
@@ -81,7 +85,10 @@ class Agent(BaseEntity):
 
     def decrease_fatigue(self, rest):
         self.fatigue -= rest
-
+    
+    def increase_socialneed(self, amount):
+        self.lonley += amount
+        
     def is_tired(self):
         return self.fatigue >= self.TIREDNESS_THRESHOLD
 

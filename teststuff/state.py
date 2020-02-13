@@ -72,9 +72,10 @@ class GoToWorkAndLabour(State):
             print('[',str(entity.id),']: Leaving Work! Did a good job today')
 
     def on_message(self, entity, msg):
-        if msg.type is MessageTypes.WORK_SELF:
+        if msg.message_type is MessageTypes.WORK_SELF:
             entity.change_state(Shopping())
-            pass
+            return True
+        return False
             
     
 class GoToOfficeJob(State):
@@ -121,6 +122,8 @@ class GoHomeAndSleep(State):
     def on_message(self, entity, msg):
         if msg.message_type is MessageTypes.ALARM_CLOCK:
             entity.change_state(GoToWorkAndLabour())
+            return True
+        return False
 
 
 class Shopping(State):

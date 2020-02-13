@@ -6,7 +6,7 @@ class MessageTypes(Enum):
     CANT_GO = 2
     SOCIAL_REQUEST = 3
     WORK_SELF = 4
-    ALARM_CLOCK = 5
+    ALARM_CLOCK = 5  
 
 
 def message_type_to_string(message_type):
