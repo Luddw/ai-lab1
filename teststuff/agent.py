@@ -94,3 +94,9 @@ class Agent(BaseEntity):
 
     def is_lonley(self):
         return self.lonley >= self.LONLEY_THRESHOLD
+    
+    def decrease_lonley(self, amount):
+        self.lonley -= amount
+    
+    def increase_lonley(self, amount):
+        self.lonley += amount

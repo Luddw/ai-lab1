@@ -31,21 +31,32 @@ class GlobalState(State):
         if entity.is_thirsty():
             entity.change_state(QuenchThirst())
         elif entity.is_hungry():
-            entity.change_state(EatFood())        
-            
+            entity.change_state(EatFood())
+        
             
     def exit(self, entity):
         return
     def on_message(self, entity, msg):
-        if msg.message_type is MessageTypes.SOCIAL_REQUEST:
-            pass    
+        if msg.message_type is MessageTypes.SOCIAL_REQUEST and entity.is_hungry() is False:
+            entity.change_state(Socialize())
+            return True
+        return False
+    
+    
+
 
 # agent states
 class Socialize(State):
     def enter(self, entity):
+        if entity.location is not Locations.CAFE:
+            print('[',str(entity.id),']: Walking to Cafe')
+            entity.location = Locations.CAFE
         return
 
     def execute(self, entity, tick_size):
+        entity.decrease_lonley(1*tick_size)
+        print('[',str(entity.id),']: f i k a')
+        
         return
 
     def exit(self, entity):
@@ -54,7 +65,16 @@ class Socialize(State):
     def on_message(self, entity, msg):
         return
     
-
+class Leisure(State):
+    def enter(self, entity):
+        pass
+    def execute(self, entity, tick_size):
+        pass
+    def exit(self, entity):
+        pass
+    def on_message(self, entity, msg):
+        pass
+    
 class GoToWorkAndLabour(State):
     def enter(self, entity):
         work_msg_self = Telegram(entity.id, entity.id, MessageTypes.WORK_SELF)
@@ -174,4 +194,4 @@ class EatFood(State):
         print('[',str(entity.id),']: going back to whatever i was doing')
 
     def on_message(self, entity, msg):
-        return
+        return 
