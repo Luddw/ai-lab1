@@ -1,3 +1,5 @@
+from telegram import Telegram
+
 class EntityManager:
     def __init__(self, tick_size):
         self.entities = {}
@@ -34,7 +36,11 @@ class EntityManager:
 
     def dispatch_message(self, telegram, tick_delay=0):
         if telegram.receiver is None:
-            print('No receipient')
+            for agent in self.entities:
+                if agent.id == telegram.sender_id:
+                    continue
+                unicast = Telegram(telegram.sender, agent.id, telegram.message_type, telegram.extra_info)
+                self.dispatch_message(unicast, tick_delay)
             return
         # check if message has delay
         if tick_delay > 0:
@@ -42,6 +48,5 @@ class EntityManager:
             self.message_q.append(telegram)
         else:
             self.discharge(telegram)
-
 
 

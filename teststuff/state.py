@@ -55,8 +55,7 @@ class Socialize(State):
 
     def execute(self, entity, tick_size):
         entity.decrease_lonley(1*tick_size)
-        print('[',str(entity.id),']: f i k a')
-        
+        print('[',str(entity.id),']: f i k a')   
         return
 
     def exit(self, entity):
@@ -70,13 +69,20 @@ class Leisure(State):
         print('[',str(entity.id),']: free time off work')
 
     def execute(self, entity, tick_size):
+        
         pass
     
     def exit(self, entity):
         print('[',str(entity.id),']: back to being busy')
         
     def on_message(self, entity, msg):
-        pass
+        if msg.message_type is MessageTypes.SOCIAL_REQUEST and entity.is_hungry() is False:
+            entity.change_state(Socialize())
+            reply = Telegram(entity.id, msg.sender, MessageTypes.ACCEPT)
+            entity.manager.dispatch_message(reply, 0)
+            return True
+        return False
+        
     
 class GoToWorkAndLabour(State):
     def enter(self, entity):
