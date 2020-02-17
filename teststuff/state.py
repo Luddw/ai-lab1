@@ -28,9 +28,9 @@ class GlobalState(State):
         entity.increase_hunger(1*tick_size)
         entity.increase_fatigue(1*tick_size)
         
-        if entity.is_thirsty():
+        if entity.is_thirsty() and entity.current_state is not GoHomeAndSleep():
             entity.change_state(QuenchThirst())
-        elif entity.is_hungry():
+        elif entity.is_hungry()and entity.current_state is not GoHomeAndSleep():
             entity.change_state(EatFood())
         
             
