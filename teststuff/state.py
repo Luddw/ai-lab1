@@ -67,11 +67,14 @@ class Socialize(State):
     
 class Leisure(State):
     def enter(self, entity):
-        pass
+        print('[',str(entity.id),']: free time off work')
+
     def execute(self, entity, tick_size):
         pass
+    
     def exit(self, entity):
-        pass
+        print('[',str(entity.id),']: back to being busy')
+        
     def on_message(self, entity, msg):
         pass
     
