@@ -51,14 +51,16 @@ class Socialize(State):
         if entity.location is not Locations.CAFE:
             print('[',str(entity.id),']: Walking to Cafe')
             entity.location = Locations.CAFE
-        return
+        
 
     def execute(self, entity, tick_size):
         entity.decrease_lonley(1*tick_size)
         print('[',str(entity.id),']: f i k a')   
-        return
+        
 
     def exit(self, entity):
+        print('[',str(entity.id),']: too much f i k a')   
+        
         return
 
     def on_message(self, entity, msg):
@@ -69,7 +71,8 @@ class Leisure(State):
         print('[',str(entity.id),']: free time off work')
 
     def execute(self, entity, tick_size):
-        
+        t = Telegram(entity.id, None,MessageTypes.SOCIAL_REQUEST)
+        entity.manager.dispatch_message(t,0)
         pass
     
     def exit(self, entity):
@@ -102,7 +105,7 @@ class GoToWorkAndLabour(State):
 
     def on_message(self, entity, msg):
         if msg.message_type is MessageTypes.WORK_SELF:
-            entity.change_state(Shopping())
+            entity.change_state(Leisure())
             return True
         return False
             
