@@ -49,17 +49,17 @@ class GlobalState(State):
 class Socialize(State):
     def enter(self, entity):
         if entity.location is not Locations.CAFE:
-            print('[',str(entity.id),']: Walking to Cafe')
+            print('[',str(entity.ID),']: Walking to Cafe')
             entity.location = Locations.CAFE
         
 
     def execute(self, entity, tick_size):
         entity.decrease_lonley(1*tick_size)
-        print('[',str(entity.id),']: f i k a')   
+        print('[',str(entity.ID),']: f i k a')   
         
 
     def exit(self, entity):
-        print('[',str(entity.id),']: too much f i k a')   
+        print('[',str(entity.ID),']: too much f i k a')   
         
         return
 
@@ -68,20 +68,20 @@ class Socialize(State):
     
 class Leisure(State):
     def enter(self, entity):
-        print('[',str(entity.id),']: free time off work')
+        print('[',str(entity.ID),']: free time off work')
 
     def execute(self, entity, tick_size):
-        t = Telegram(entity.id, None,MessageTypes.SOCIAL_REQUEST)
+        t = Telegram(entity.ID, None, MessageTypes.SOCIAL_REQUEST)
         entity.manager.dispatch_message(t,0)
         pass
     
     def exit(self, entity):
-        print('[',str(entity.id),']: back to being busy')
+        print('[',str(entity.ID),']: back to being busy')
         
     def on_message(self, entity, msg):
         if msg.message_type is MessageTypes.SOCIAL_REQUEST and entity.is_hungry() is False:
             entity.change_state(Socialize())
-            reply = Telegram(entity.id, msg.sender, MessageTypes.ACCEPT)
+            reply = Telegram(entity.ID, msg.sender, MessageTypes.ACCEPT)
             entity.manager.dispatch_message(reply, 0)
             return True
         return False
@@ -89,19 +89,19 @@ class Leisure(State):
     
 class GoToWorkAndLabour(State):
     def enter(self, entity):
-        work_msg_self = Telegram(entity.id, entity.id, MessageTypes.WORK_SELF)
+        work_msg_self = Telegram(entity.ID, entity.ID, MessageTypes.WORK_SELF)
         entity.manager.dispatch_message(work_msg_self, 8) #tick_size as msg delay
         if entity.location is not Locations.WORKPLACE:
-            print('[',str(entity.id),']: Walking to work')
+            print('[',str(entity.ID),']: Walking to work')
             entity.location = Locations.WORKPLACE
 
     def execute(self, entity, tick_size):
-        print('[',str(entity.id),']: Earning money')
+        print('[',str(entity.ID),']: Earning money')
         entity.increase_money(1*tick_size)
 
     def exit(self, entity):
         if entity.is_rich():
-            print('[',str(entity.id),']: Leaving Work! Did a good job today')
+            print('[',str(entity.ID),']: Leaving Work! Did a good job today')
 
     def on_message(self, entity, msg):
         if msg.message_type is MessageTypes.WORK_SELF:
@@ -112,15 +112,15 @@ class GoToWorkAndLabour(State):
     
 class GoToOfficeJob(State):
     def enter(self, entity):
-        work_msg_self = Telegram(entity.id, entity.id, MessageTypes.WORK_SELF)
+        work_msg_self = Telegram(entity.ID, entity.ID, MessageTypes.WORK_SELF)
         entity.manager.dispatch_message(work_msg_self, 6) 
         if entity.location is not Locations.OFFICE:
-            print('[',str(entity.id),']: Walking to the Office')
+            print('[',str(entity.ID),']: Walking to the Office')
             entity.location = Locations.OFFICE
 
     def execute(self, entity, tick_size):
         entity.increase_money(2*tick_size)
-        print('[',str(entity.id),']: pencil pusher getting money!')
+        print('[',str(entity.ID),']: pencil pusher getting money!')
 
         if entity.pockets_full():
             entity.change_state(QuenchThirst())
@@ -129,7 +129,7 @@ class GoToOfficeJob(State):
             entity.change_state(QuenchThirst())
 
     def exit(self, entity):
-        print('[',str(entity.id),']: Leaving OFFICE! Did a good job today')
+        print('[',str(entity.ID),']: Leaving OFFICE! Did a good job today')
 
     def on_message(self, entity, msg):
         return
@@ -137,18 +137,18 @@ class GoToOfficeJob(State):
 
 class GoHomeAndSleep(State):
     def enter(self, entity):
-        alarm_clock_msg = Telegram(entity.id, entity.id, MessageTypes.ALARM_CLOCK)
+        alarm_clock_msg = Telegram(entity.ID, entity.ID, MessageTypes.ALARM_CLOCK)
         entity.manager.dispatch_message(alarm_clock_msg, 8) #tick_size as msg delay
         if entity.location is not Locations.HOME:
-            print('[',str(entity.id),']: Walking home to Sleep')
+            print('[',str(entity.ID),']: Walking home to Sleep')
             entity.change_location(Locations.HOME)
 
     def execute(self, entity, tick_size):
             entity.decrease_fatigue(1*tick_size)
-            print('[',str(entity.id),']: sleeping ZZZZ....')
+            print('[',str(entity.ID),']: sleeping ZZZZ....')
 
     def exit(self, entity):
-        print('[',str(entity.id),']: Leaving the house')
+        print('[',str(entity.ID),']: Leaving the house')
 
     #TODO messagesys for state
     def on_message(self, entity, msg):
@@ -160,32 +160,32 @@ class GoHomeAndSleep(State):
 
 class Shopping(State):
     def enter(self, entity):
-        print('[',str(entity.id),']: Spending my hard earned cash!')
+        print('[',str(entity.ID),']: Spending my hard earned cash!')
 
     def execute(self, entity, tick_size):
-        print('[',str(entity.id),']: Spending money in the shop')
+        print('[',str(entity.ID),']: Spending money in the shop')
         entity.spend_money()
         entity.change_state(GoHomeAndSleep())
 
     def exit(self, entity):
-        print('[',str(entity.id),']: going back to whatever i was doing')
+        print('[',str(entity.ID),']: going back to whatever i was doing')
 
     def on_message(self, entity, msg):
         return
     
 class QuenchThirst(State):
     def enter(self, entity):
-        print('[',str(entity.id),']: Im thirsty!')
+        print('[',str(entity.ID),']: Im thirsty!')
         #if entity.location is not Locations.TRAVVEN:
-         #   print('[',str(entity.id),']: Im thirsty! Walking to Schtaans bästa student pub')
+         #   print('[',str(entity.ID),']: Im thirsty! Walking to Schtaans bästa student pub')
            # entity.change_location(Locations.TRAVVEN)
 
     def execute(self, entity, tick_size):
             entity.drink()
-            print('[',str(entity.id),']: GLUGG GLUGG GLUGG!')
+            print('[',str(entity.ID),']: GLUGG GLUGG GLUGG!')
             entity.revert_to_previous_state()
     def exit(self, entity):
-        print('[',str(entity.id),']: Thirst g o n e !')
+        print('[',str(entity.ID),']: Thirst g o n e !')
 
     def on_message(self, entity, msg):
         return
@@ -195,15 +195,15 @@ class QuenchThirst(State):
 class EatFood(State):
 
     def enter(self, entity):
-        print('[',str(entity.id),']: Im very hungry')
+        print('[',str(entity.ID),']: Im very hungry')
 
     def execute(self, entity, tick_size):
-        print('[',str(entity.id),']: NOM NOM NOM')
+        print('[',str(entity.ID),']: NOM NOM NOM')
         entity.eat()
         entity.revert_to_previous_state()
 
     def exit(self, entity):
-        print('[',str(entity.id),']: going back to whatever i was doing')
+        print('[',str(entity.ID),']: going back to whatever i was doing')
 
     def on_message(self, entity, msg):
         return 

@@ -5,8 +5,8 @@ class BaseEntity:
     
     def _setID(self, value):
         assert value >= BaseEntity._nextValidID, "INVALID ID, YOURE BREAKING THE LAW"
-        self.id = value
-        BaseEntity._nextValidID = self.id + 1
+        self.ID = value
+        BaseEntity._nextValidID = self.ID + 1
 
     def __init__(self, ID, entitytype=-1):
         self._setID(ID)

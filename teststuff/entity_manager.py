@@ -7,12 +7,12 @@ class EntityManager:
         self.message_q = []
         
     def add_entity(self, entity):
-        self.entities[entity.id] = entity
+        self.entities[entity.ID] = entity
         entity.manager = self
     
     def add_entity_dict(self, entities):
         for ent in entities:
-            self.entities[ent.id] = ent
+            self.entities[ent.ID] = ent
             ent.manager = self
         
     def update(self, tick_size):
@@ -37,9 +37,10 @@ class EntityManager:
     def dispatch_message(self, telegram, tick_delay=0):
         if telegram.receiver is None:
             for agent in self.entities:
-                if agent.id == telegram.sender_id:
+                print(agent)
+                if agent is telegram.sender:
                     continue
-                unicast = Telegram(telegram.sender, agent.id, telegram.message_type, telegram.extra_info)
+                unicast = Telegram(telegram.sender, agent, telegram.message_type, telegram.extra_info)
                 self.dispatch_message(unicast, tick_delay)
             return
         # check if message has delay

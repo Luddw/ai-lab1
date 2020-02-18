@@ -11,10 +11,10 @@ def main():
     stud = Agent(2,current_state=Shopping(), location=Locations.HOME, globalstate=GlobalState())
     entmanager.add_entity(student)
     entmanager.add_entity(stud)
-    
 
     for i in range(50):
         entmanager.update(1)
         
 if __name__ == '__main__':
     main()
+
