@@ -72,17 +72,16 @@ class Leisure(State):
 
     def execute(self, entity, tick_size):
         t = Telegram(entity.ID, None, MessageTypes.SOCIAL_REQUEST)
-        entity.manager.dispatch_message(t,0)
-        pass
+        entity.manager.dispatch_message(t)
     
     def exit(self, entity):
-        print('[',str(entity.ID),']: back to being busy')
+        print('[{}]: back to being busy'.format(entity.ID))
         
     def on_message(self, entity, msg):
-        if msg.message_type is MessageTypes.SOCIAL_REQUEST and entity.is_hungry() is False:
+        if msg.message_type is MessageTypes.SOCIAL_REQUEST and not entity.is_hungry():
             entity.change_state(Socialize())
             reply = Telegram(entity.ID, msg.sender, MessageTypes.ACCEPT)
-            entity.manager.dispatch_message(reply, 0)
+            entity.manager.dispatch_message(reply)
             return True
         return False
         
