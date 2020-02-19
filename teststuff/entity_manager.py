@@ -37,7 +37,6 @@ class EntityManager:
     def dispatch_message(self, telegram, tick_delay=0):
         if telegram.receiver is None:
             for agent in self.entities.values():
-                print(agent)
                 if agent == telegram.sender:
                     continue
                 unicast = Telegram(telegram.sender, agent.ID, telegram.message_type, telegram.extra_info)

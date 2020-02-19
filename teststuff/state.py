@@ -37,10 +37,11 @@ class GlobalState(State):
     def exit(self, entity):
         return
     def on_message(self, entity, msg):
-        if msg.message_type is MessageTypes.SOCIAL_REQUEST and entity.is_hungry() is False:
-            entity.change_state(Socialize())
-            return True
-        return False
+        pass
+    #    if msg.message_type is MessageTypes.SOCIAL_REQUEST and entity.is_hungry() is False:
+     #       entity.change_state(Socialize())
+      #      return True
+       # return False
     
     
 
@@ -71,9 +72,12 @@ class Leisure(State):
         print('[',str(entity.ID),']: free time off work')
 
     def execute(self, entity, tick_size):
-        t = Telegram(entity.ID, None, MessageTypes.SOCIAL_REQUEST)
-        entity.manager.dispatch_message(t)
-    
+        if entity.is_lonley:
+            t = Telegram(entity.ID, None, MessageTypes.SOCIAL_REQUEST)
+            entity.manager.dispatch_message(t)
+        else:
+            entity.change_state(Shopping())
+            
     def exit(self, entity):
         print('[{}]: back to being busy'.format(entity.ID))
         
