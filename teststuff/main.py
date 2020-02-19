@@ -9,9 +9,14 @@ entmanager = EntityManager(1)
 def main():
     student = Agent(1,current_state=GoToWorkAndLabour(), location=Locations.HOME, globalstate=GlobalState())
     stud = Agent(2,current_state=Shopping(), location=Locations.HOME, globalstate=GlobalState())
+    stud1 = Agent(3,current_state=Shopping(), location=Locations.HOME, globalstate=GlobalState())
+    stud2 = Agent(4,current_state=Shopping(), location=Locations.HOME, globalstate=GlobalState())
+    
+    
     entmanager.add_entity(student)
     entmanager.add_entity(stud)
-
+    entmanager.add_entity(stud1)
+    entmanager.add_entity(stud2)
     for i in range(50):
         entmanager.update(1)
         
