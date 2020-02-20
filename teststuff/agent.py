@@ -17,8 +17,8 @@ class Agent(BaseEntity):
         self.COMFORT_LEVEL = 5
         self.MAX_MONEY = 10
         self.THIRST_LEVEL = 10
-        self.HUNGER_LEVEL = 5
-        self.LONLEY_THRESHOLD = 10
+        self.HUNGER_LEVEL = 7
+        self.LONLEY_THRESHOLD = 15
         self.TIREDNESS_THRESHOLD = 40
 
     def update(self, tick_size):
