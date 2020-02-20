@@ -27,7 +27,7 @@ class GlobalState(State):
         entity.increase_thirst(1*tick_size)
         entity.increase_hunger(1*tick_size)
         entity.increase_fatigue(1*tick_size)
-        
+        entity.increase_lonley(1*tick_size)
         if entity.is_thirsty() and entity.current_state is not GoHomeAndSleep():
             entity.change_state(QuenchThirst())
         elif entity.is_hungry()and entity.current_state is not GoHomeAndSleep():
@@ -38,12 +38,6 @@ class GlobalState(State):
         return
     def on_message(self, entity, msg):
         pass
-    #    if msg.message_type is MessageTypes.SOCIAL_REQUEST and entity.is_hungry() is False:
-     #       entity.change_state(Socialize())
-      #      return True
-       # return False
-    
-    
 
 
 # agent states
@@ -56,7 +50,7 @@ class Socialize(State):
 
     def execute(self, entity, tick_size):
         entity.decrease_lonley(1*tick_size)
-        print('[',str(entity.ID),']: f i k a')   
+        print('[',str(entity.ID),']: SOCIAL f i k a')   
         
 
     def exit(self, entity):
@@ -69,7 +63,7 @@ class Socialize(State):
     
 class Leisure(State):
     def enter(self, entity):
-        print('[',str(entity.ID),']: free time off work')
+        print('[',str(entity.ID),']: LEISURE free time off work')
 
     def execute(self, entity, tick_size):
         if entity.is_lonley:
@@ -79,8 +73,8 @@ class Leisure(State):
             entity.change_state(Shopping())
             
     def exit(self, entity):
-        print('[{}]: back to being busy'.format(entity.ID))
-        
+        pass
+    
     def on_message(self, entity, msg):
         if msg.message_type is MessageTypes.SOCIAL_REQUEST and not entity.is_hungry():
             entity.change_state(Socialize())
@@ -99,12 +93,12 @@ class GoToWorkAndLabour(State):
             entity.location = Locations.WORKPLACE
 
     def execute(self, entity, tick_size):
-        print('[',str(entity.ID),']: Earning money')
+        print('[',str(entity.ID),']: WORK Earning money')
         entity.increase_money(1*tick_size)
 
     def exit(self, entity):
         if entity.is_rich():
-            print('[',str(entity.ID),']: Leaving Work! Did a good job today')
+            print('[',str(entity.ID),']: WORK Leaving Work! Did a good job today')
 
     def on_message(self, entity, msg):
         if msg.message_type is MessageTypes.WORK_SELF:
