@@ -16,9 +16,9 @@ class Agent(BaseEntity):
         self.lonley = 0
         self.COMFORT_LEVEL = 5
         self.MAX_MONEY = 10
-        self.THIRST_LEVEL = 10
-        self.HUNGER_LEVEL = 7
-        self.LONLEY_THRESHOLD = 15
+        self.THIRST_LEVEL = 30
+        self.HUNGER_LEVEL = 40
+        self.LONLEY_THRESHOLD = 50
         self.TIREDNESS_THRESHOLD = 40
 
     def update(self, tick_size):
@@ -29,7 +29,10 @@ class Agent(BaseEntity):
 
 
     def handle_message(self, telegram):
-        self.current_state.on_message(self, telegram)
+        
+        telegramAccept=self.current_state.on_message(self, telegram)
+        if telegramAccept is True:
+            ea
         self.global_state.on_message(self, telegram)
 
     def change_state(self, new_state):

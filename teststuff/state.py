@@ -43,6 +43,8 @@ class GlobalState(State):
 # agent states
 class Socialize(State):
     def enter(self, entity):
+        social_msg_self = Telegram(entity.ID, entity.ID, MessageTypes.SOCIAL_SELF)
+        entity.manager.dispatch_message(social_msg_self, 4) #tick_size as msg delay
         if entity.location is not Locations.CAFE:
             print('[',str(entity.ID),']: Walking to Cafe')
             entity.location = Locations.CAFE
@@ -59,8 +61,11 @@ class Socialize(State):
         return
 
     def on_message(self, entity, msg):
-        return
-    
+        if msg.message_type is MessageTypes.SOCIAL_SELF:
+            entity.change_state(GoHomeAndSleep())
+            return True
+        return False
+            
 class Leisure(State):
     def enter(self, entity):
         print('[',str(entity.ID),']: LEISURE free time off work')
@@ -68,7 +73,8 @@ class Leisure(State):
     def execute(self, entity, tick_size):
         if entity.is_lonley:
             t = Telegram(entity.ID, None, MessageTypes.SOCIAL_REQUEST)
-            entity.manager.dispatch_message(t)
+            l = entity.manager.dispatch_message(t)
+            print("1")
         else:
             entity.change_state(Shopping())
             
@@ -142,7 +148,7 @@ class GoHomeAndSleep(State):
 
     def execute(self, entity, tick_size):
             entity.decrease_fatigue(1*tick_size)
-            print('[',str(entity.ID),']: sleeping ZZZZ....')
+            print('[',str(entity.ID),']:SLEEP sleeping ZZZZ....')
 
     def exit(self, entity):
         print('[',str(entity.ID),']: Leaving the house')
@@ -160,12 +166,12 @@ class Shopping(State):
         print('[',str(entity.ID),']: Spending my hard earned cash!')
 
     def execute(self, entity, tick_size):
-        print('[',str(entity.ID),']: Spending money in the shop')
+        print('[',str(entity.ID),']: SHOP Spending money in the shop')
         entity.spend_money()
         entity.change_state(GoHomeAndSleep())
 
     def exit(self, entity):
-        print('[',str(entity.ID),']: going back to whatever i was doing')
+        print('[',str(entity.ID),']: walking Home from the shop')
 
     def on_message(self, entity, msg):
         return
@@ -179,7 +185,7 @@ class QuenchThirst(State):
 
     def execute(self, entity, tick_size):
             entity.drink()
-            print('[',str(entity.ID),']: GLUGG GLUGG GLUGG!')
+            print('[',str(entity.ID),']: DRINK GLUGG GLUGG GLUGG!')
             entity.revert_to_previous_state()
     def exit(self, entity):
         print('[',str(entity.ID),']: Thirst g o n e !')
@@ -195,7 +201,7 @@ class EatFood(State):
         print('[',str(entity.ID),']: Im very hungry')
 
     def execute(self, entity, tick_size):
-        print('[',str(entity.ID),']: NOM NOM NOM')
+        print('[',str(entity.ID),']: EAT NOM NOM NOM')
         entity.eat()
         entity.revert_to_previous_state()
 
