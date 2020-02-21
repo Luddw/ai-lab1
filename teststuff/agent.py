@@ -28,11 +28,8 @@ class Agent(BaseEntity):
             self.current_state.execute(self, tick_size)
 
 
-    def handle_message(self, telegram):
-        
-        telegramAccept=self.current_state.on_message(self, telegram)
-        if telegramAccept is True:
-            ea
+    def handle_message(self, telegram):     
+        self.current_state.on_message(self, telegram)
         self.global_state.on_message(self, telegram)
 
     def change_state(self, new_state):

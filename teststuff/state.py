@@ -56,7 +56,7 @@ class Socialize(State):
         
 
     def exit(self, entity):
-        print('[',str(entity.ID),']: too much f i k a')   
+        print('[',str(entity.ID),']: leaving cafe')   
         
         return
 
@@ -73,8 +73,7 @@ class Leisure(State):
     def execute(self, entity, tick_size):
         if entity.is_lonley:
             t = Telegram(entity.ID, None, MessageTypes.SOCIAL_REQUEST)
-            l = entity.manager.dispatch_message(t)
-            print("1")
+            entity.manager.dispatch_message(t)
         else:
             entity.change_state(Shopping())
             
