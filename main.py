@@ -1,7 +1,6 @@
 from locations import Locations
 from agent import Agent
 from state import *
-from wife import Wife
 import time
 from entity_manager import EntityManager
 
